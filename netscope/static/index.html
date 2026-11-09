@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1220">
+<title>NetScope — Network Diagnostics</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1220;--panel:#142238;--line:#26364d;--text:#e8f0fb;--muted:#91a3ba;--teal:#35d6c2;--blue:#55a9ef;--red:#ff737d}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 15% 0%,#15304a 0,transparent 38%),var(--bg);color:var(--text);font:15px/1.55 system-ui,sans-serif}
+.wrap{max-width:1080px;margin:auto;padding:22px 16px 50px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
+.brand{display:flex;align-items:center;gap:11px;font-size:22px;font-weight:800}
+.logo{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,var(--teal),#2385bd);display:grid;place-items:center;color:#06131c;font-size:22px}
+.pill{border:1px solid #24594f;color:var(--teal);padding:5px 10px;border-radius:99px;font-size:12px}
+.hero h1{font-size:clamp(28px,5vw,43px);line-height:1.12;margin:0 0 9px}
+.hero p,.card p{color:var(--muted)}
+.hero p{margin:0 0 22px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.card{background:linear-gradient(155deg,#142238,#101a2a);border:1px solid var(--line);border-radius:16px;padding:17px;min-width:0}
+.card h2{font-size:15px;margin:0 0 5px}
+.card p{font-size:13px;margin:0 0 13px}
+.icon{color:var(--teal);font-size:20px}
+.field{display:flex;flex-direction:column;gap:6px;margin:14px 0}
+.field label{color:var(--muted);font-size:12px}
+input{width:100%;background:#0b1423;border:1px solid #30435d;border-radius:9px;color:var(--text);padding:11px;font:inherit;min-width:0}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.btn{width:100%;border:0;border-radius:9px;background:linear-gradient(100deg,var(--teal),var(--blue));color:#06151e;font-weight:800;padding:11px;cursor:pointer}
+.btn:disabled{opacity:.55}
+.result{margin-top:22px;display:none}
+.status{color:var(--muted);font-size:13px;margin:10px 0}
+.result-box{background:#0b1423;border:1px solid var(--line);border-radius:14px;padding:15px}
+.result-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.result-head h2{font-size:17px;margin:0}
+.tag{font-size:11px;font-weight:800;padding:4px 9px;border-radius:30px;background:#26364d;color:var(--muted)}
+.tag.ok{background:#123d38;color:#62e4c9}
+.tag.bad{background:#48242d;color:#ff929b}
+.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.metric{background:#142238;border:1px solid var(--line);border-radius:10px;padding:11px;min-width:0}
+.metric small{display:block;color:var(--muted);font-size:11px;margin-bottom:4px}
+.metric strong{font-size:15px;overflow-wrap:anywhere}
+.detail{margin-top:12px}
+.detail h3{font-size:13px;color:var(--muted);margin:0 0 8px}
+.address{display:flex;flex-wrap:wrap;gap:7px}
+.address span{background:#17283e;border:1px solid var(--line);padding:5px 9px;border-radius:7px;font:12px ui-monospace,monospace;overflow-wrap:anywhere}
+.output{white-space:pre-wrap;overflow-wrap:anywhere;background:#07101c;border:1px solid var(--line);border-radius:10px;padding:13px;color:#c8d8eb;font:12px/1.7 ui-monospace,monospace;max-height:440px;overflow:auto}
+.error{color:#ff929b}
+.notice{border:1px solid #34455c;background:#111c2e;padding:12px 14px;border-radius:12px;color:var(--muted);font-size:12px;margin-top:16px}
+.foot{color:var(--muted);font-size:12px;text-align:center;margin-top:25px}
+.foot a{color:var(--teal);text-decoration:none}
+@media(max-width:760px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.wrap{padding:17px 12px 35px}}
+@media(max-width:480px){.grid{grid-template-columns:1fr}.card{padding:15px}.metrics{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+<div class="brand"><div class="logo">⌁</div>NetScope</div>
+<span class="pill">● LOCAL MODE</span>
+</header>
+
+<section class="hero">
+<h1>Network diagnostics,<br>made simple.</h1>
+<p>Understand your connection with lightweight tools running locally on your device.</p>
+</section>
+
+<section class="grid">
+<article class="card">
+<div class="icon">◎</div><h2>Network summary</h2>
+<p>Local IP, DNS and HTTPS reachability.</p>
+<div class="field"><label>Target host</label><input id="summary-host" value="example.com"></div>
+<button class="btn" onclick="run('summary','summary-host',this)">Run summary</button>
+</article>
+
+<article class="card">
+<div class="icon">⌕</div><h2>DNS lookup</h2>
+<p>Resolve a hostname to IP addresses.</p>
+<div class="field"><label>Hostname</label><input id="dns-host" value="github.com"></div>
+<button class="btn" onclick="run('dns','dns-host',this)">Resolve DNS</button>
+</article>
+
+<article class="card">
+<div class="icon">⇄</div><h2>TCP port check</h2>
+<p>Test one host and port you are allowed to check.</p>
+<div class="field"><label>Hostname</label><input id="port-host" value="github.com"></div>
+<div class="row">
+<div class="field"><label>Port</label><input id="port-number" type="number" min="1" max="65535" value="443"></div>
+<div class="field"><label>Timeout (s)</label><input id="port-timeout" type="number" min=".5" max="10" step=".5" value="3"></div>
+</div>
+<button class="btn" onclick="run('port','port-host',this)">Check port</button>
+</article>
+
+<article class="card">
+<div class="icon">⌁</div><h2>Ping</h2>
+<p>Measure packet loss and round-trip time.</p>
+<div class="field"><label>Host or IP</label><input id="ping-host" value="1.1.1.1"></div>
+<div class="row">
+<div class="field"><label>Packets</label><input id="ping-count" type="number" min="1" max="10" value="4"></div>
+<div class="field"><label>Timeout (s)</label><input id="ping-timeout" type="number" min="1" max="5" value="2"></div>
+</div>
+<button class="btn" onclick="run('ping','ping-host',this)">Start ping</button>
+</article>
+
+<article class="card">
+<div class="icon">◇</div><h2>IPv6 check</h2>
+<p>Check IPv6 DNS records and actual connectivity separately.</p>
+<div class="field"><label>Hostname</label><input id="ipv6-host" value="cloudflare.com"></div>
+<button class="btn" onclick="run('ipv6','ipv6-host',this)">Check IPv6</button>
+</article>
+
+<article class="card">
+<div class="icon">⌖</div><h2>Traceroute</h2>
+<p>View the route towards a destination.</p>
+<div class="field"><label>Hostname</label><input id="trace-host" value="github.com"></div>
+<div class="row">
+<div class="field"><label>Max hops</label><input id="trace-hops" type="number" min="1" max="30" value="12"></div>
+<div class="field"><label>Timeout (s)</label><input id="trace-timeout" type="number" min="1" max="5" value="2"></div>
+</div>
+<button class="btn" onclick="run('trace','trace-host',this)">Trace route</button>
+</article>
+</section>
+
+<section class="result" id="result">
+<div class="status" id="status" role="status"></div>
+<div class="result-box" id="output"></div>
+</section>
+
+<div class="notice">Privacy: the server listens only on 127.0.0.1. Diagnostics run from your device; reports are not uploaded. Only test systems you own or have permission to examine.</div>
+<footer class="foot">Built by <a href="https://github.com/Khayom1" target="_blank" rel="noopener">Khayom1</a> · <a href="https://github.com/Khayom1/NetScope" target="_blank" rel="noopener">GitHub repository</a> · NetScope v0.2.0</footer>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+
+function element(tag, className, text) {
+ const node=document.createElement(tag);
+ if(className) node.className=className;
+ if(text!==undefined) node.textContent=String(text);
+ return node;
+}
+
+function metric(parent,label,value,good=null) {
+ const box=element('div','metric');
+ box.append(element('small','',label));
+ const strong=element('strong','',value);
+ if(good===false) strong.classList.add('error');
+ box.append(strong);
+ parent.append(box);
+}
+
+function section(parent,title) {
+ const box=element('div','detail');
+ box.append(element('h3','',title));
+ parent.append(box);
+ return box;
+}
+
+function renderResult(data) {
+ const root=$('output');
+ root.replaceChildren();
+
+ const metrics=element('div','metrics');
+ root.append(metrics);
+
+ if(data && typeof data==='object' && !Array.isArray(data)) {
+  if('host' in data) metric(metrics,'HOST',data.host);
+  if('ok' in data) metric(metrics,'DIAGNOSTIC',data.ok?'Successful':'Failed',data.ok);
+  if('open' in data) metric(metrics,'TCP PORT',data.open?'Open':'Closed',data.open);
+  if('available' in data) metric(metrics,'IPV6 STATUS',data.available?'Available':'Unavailable',data.available);
+  if('dns_available' in data) metric(metrics,'IPV6 DNS',data.dns_available?'Records found':'No records',data.dns_available);
+  if('connectivity_available' in data) metric(metrics,'IPV6 CONNECTIVITY',data.connectivity_available?'Connected':'Not reachable',data.connectivity_available);
+  if('tcp_443_reachable' in data) metric(metrics,'TCP 443',data.tcp_443_reachable?'Reachable':'Unreachable',data.tcp_443_reachable);
+  if('elapsed_ms' in data) metric(metrics,'RESPONSE TIME',data.elapsed_ms+' ms');
+  if('local_ip' in data) metric(metrics,'LOCAL IP',data.local_ip);
+  if('packet_loss_percent' in (data.statistics||{})) metric(metrics,'PACKET LOSS',data.statistics.packet_loss_percent+'%');
+  if('avg_ms' in (data.statistics||{})) metric(metrics,'AVERAGE PING',data.statistics.avg_ms+' ms');
+  if('min_ms' in (data.statistics||{})) metric(metrics,'MIN PING',data.statistics.min_ms+' ms');
+  if('max_ms' in (data.statistics||{})) metric(metrics,'MAX PING',data.statistics.max_ms+' ms');
+  if('port' in data) metric(metrics,'PORT',data.port);
+
+  if(!metrics.children.length) metrics.remove();
+
+  if(Array.isArray(data.addresses) || Array.isArray(data.ipv6_addresses)) {
+   const values=data.ipv6_addresses||data.addresses;
+   const box=section(root,'IP ADDRESSES');
+   const list=element('div','address');
+   values.forEach(value=>list.append(element('span','',value)));
+   if(!values.length) list.append(element('span','','No addresses found'));
+   box.append(list);
+  }
+
+  if(data.dns && typeof data.dns==='object') {
+   const box=section(root,'DNS DETAILS');
+   renderNested(box,data.dns);
+  }
+  if(data.https_1_1_1_1 && typeof data.https_1_1_1_1==='object') {
+   const box=section(root,'HTTPS CONNECTIVITY');
+   renderNested(box,data.https_1_1_1_1);
+  }
+  if(data.tested_address) {
+   const box=section(root,'TESTED IPV6 ADDRESS');
+   box.append(element('div','address')).firstChild.append(element('span','',data.tested_address));
+  }
+  if(data.statistics && typeof data.statistics==='object') {
+   const box=section(root,'PING STATISTICS');
+   renderNested(box,data.statistics);
+  }
+  if(data.output) {
+   const box=section(root,'COMMAND OUTPUT');
+   box.append(element('pre','output',data.output));
+  }
+  if(data.error || data.dns_error) {
+   const box=section(root,'DIAGNOSTIC MESSAGE');
+   box.append(element('div','error',data.error||data.dns_error));
+  }
+  if(data.system || data.python || data.version) {
+   const box=section(root,'SYSTEM INFORMATION');
+   renderNested(box,{system:data.system,python:data.python,version:data.version});
+  }
+  return;
+ }
+ root.append(element('pre','output',JSON.stringify(data,null,2)));
+}
+
+function renderNested(parent,obj) {
+ const grid=element('div','metrics');
+ for(const [key,value] of Object.entries(obj)) {
+  if(value===null || value===undefined) continue;
+  if(typeof value==='object') continue;
+  metric(grid,key.replaceAll('_',' ').toUpperCase(),value);
+ }
+ if(grid.children.length) parent.append(grid);
+ for(const [key,value] of Object.entries(obj)) {
+  if(Array.isArray(value)) {
+   const box=section(parent,key.replaceAll('_',' ').toUpperCase());
+   const list=element('div','address');
+   value.forEach(item=>list.append(element('span','',item)));
+   box.append(list);
+  } else if(value && typeof value==='object') {
+   const box=section(parent,key.replaceAll('_',' ').toUpperCase());
+   renderNested(box,value);
+  }
+ }
+}
+
+async function run(action,hostId,button) {
+ const host=$(hostId).value.trim();
+ if(!host){alert('Enter a hostname or IP address.');return}
+ const body={action,host};
+
+ if(action==='port'){
+  body.port=Number($('port-number').value);
+  body.timeout=Number($('port-timeout').value);
+ }
+ if(action==='ping'){
+  body.count=Number($('ping-count').value);
+  body.timeout=Number($('ping-timeout').value);
+ }
+ if(action==='trace'){
+  body.max_hops=Number($('trace-hops').value);
+  body.timeout=Number($('trace-timeout').value);
+ }
+
+ const panel=$('result');
+ $('status').textContent='Running '+action+'…';
+ $('output').replaceChildren(element('div','status','Please wait…'));
+ panel.style.display='block';
+ button.disabled=true;
+
+ try {
+  const response=await fetch('/api/run',{
+   method:'POST',
+   headers:{'Content-Type':'application/json'},
+   body:JSON.stringify(body)
+  });
+  const data=await response.json();
+  if(!response.ok||!data.ok) throw new Error(data.error||'Request failed');
+  $('status').textContent='Completed · '+action;
+  renderResult(data.result);
+ } catch(error) {
+  $('status').textContent='Could not complete diagnostic';
+  $('output').replaceChildren(element('div','error',error.message));
+ } finally {
+  button.disabled=false;
+ }
+ panel.scrollIntoView({behavior:'smooth',block:'start'});
+}
+</script>
+</body>
+</html>

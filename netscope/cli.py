@@ -113,27 +113,44 @@ def ping_host(host: str, count: int = 4, timeout: int = 2) -> dict[str, Any]:
 
 def ipv6_check(host: str = "cloudflare.com", timeout: float = 3.0) -> dict[str, Any]:
     dns = dns_lookup(host, socket.AF_INET6)
+
     if not dns["ok"]:
-        return {"host": host, "available": False, "dns": dns}
-    started = time.perf_counter()
-    try:
-        with socket.create_connection(("2606:4700:4700::1111", 443), timeout=timeout):
-            elapsed = round((time.perf_counter() - started) * 1000, 2)
-            return {
-                "host": host,
-                "available": True,
-                "ipv6_addresses": dns["addresses"],
-                "tcp_443_reachable": True,
-                "elapsed_ms": elapsed,
-            }
-    except OSError as exc:
         return {
             "host": host,
-            "available": False,
-            "ipv6_addresses": dns["addresses"],
-            "tcp_443_reachable": False,
-            "error": str(exc),
+            "dns_available": False,
+            "connectivity_available": False,
+            "ipv6_addresses": [],
+            "dns_error": dns.get("error", "No IPv6 DNS records found"),
         }
+
+    addresses = dns["addresses"]
+    started = time.perf_counter()
+    errors = []
+
+    for address in addresses:
+        try:
+            with socket.create_connection((address, 443), timeout=timeout):
+                elapsed = round((time.perf_counter() - started) * 1000, 2)
+                return {
+                    "host": host,
+                    "dns_available": True,
+                    "connectivity_available": True,
+                    "ipv6_addresses": addresses,
+                    "tested_address": address,
+                    "tcp_443_reachable": True,
+                    "elapsed_ms": elapsed,
+                }
+        except OSError as exc:
+            errors.append(str(exc))
+
+    return {
+        "host": host,
+        "dns_available": True,
+        "connectivity_available": False,
+        "ipv6_addresses": addresses,
+        "tcp_443_reachable": False,
+        "error": errors[-1] if errors else "IPv6 connection failed",
+    }
 
 
 def traceroute_host(host: str, max_hops: int = 12, timeout: int = 2) -> dict[str, Any]:
@@ -150,7 +167,7 @@ def traceroute_host(host: str, max_hops: int = 12, timeout: int = 2) -> dict[str
         }
     try:
         completed = subprocess.run(
-            [executable, "-m", "icmp", "-m", str(max_hops), "-w", str(timeout), host],
+            [executable, "-I", "-m", str(max_hops), "-w", str(timeout), host],
             capture_output=True, text=True, timeout=max_hops * timeout + 5
         )
         output = (completed.stdout or completed.stderr).strip()

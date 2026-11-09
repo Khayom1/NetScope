@@ -1,0 +1,19 @@
+# NetScope Web Add-on
+
+This add-on adds a responsive local web interface to the existing NetScope v0.2.0 project.
+
+## Install
+
+Copy the `netscope/` directory from this archive into the root of your NetScope repository, merging it with the existing `netscope/` directory. Do not delete your existing `cli.py` or `__init__.py`.
+
+## Run
+
+```bash
+python -m netscope.web
+```
+
+Open `http://127.0.0.1:8765` on the same device.
+
+Stop the server with `Ctrl+C`.
+
+The server binds only to `127.0.0.1`; it is not exposed to the local network or internet. No third-party Python packages are required. Traceroute requires the optional system `traceroute` utility.
