@@ -1,0 +1,24 @@
+{
+  "tool": "NetScope",
+  "version": "0.2.0",
+  "system": "Android",
+  "python": "3.14.10",
+  "local_ip": "10.215.9.49",
+  "dns": {
+    "host": "example.com",
+    "ok": true,
+    "addresses": [
+      "104.20.23.154",
+      "172.66.147.243",
+      "2606:4700:10::6814:179a",
+      "2606:4700:10::ac42:93f3"
+    ],
+    "elapsed_ms": 103.96
+  },
+  "https_1_1_1_1": {
+    "host": "1.1.1.1",
+    "port": 443,
+    "open": true,
+    "elapsed_ms": 15.2
+  }
+}
