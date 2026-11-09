@@ -1,3 +1,11 @@
+
+<p align="center">
+  <img src="assets/netscope-banner.gif"
+       alt="NetScope Animated Banner"
+       width="100%">
+</p>
+
+
 NetScope
 
 Lightweight network diagnostics for Android Termux and desktop Python.
@@ -15,6 +23,14 @@ Features
 - IPv6 diagnostics — check IPv6 DNS records and connectivity separately.
 - Traceroute — optionally inspect network routing paths.
 - Report export — save diagnostic results as JSON or TXT.
+- 
+- 
+<p align="center">
+  <img src="assets/netscope-preview.png"
+       alt="NetScope Application Preview"
+       width="100%">
+</p>
+
 
 Requirements
 
