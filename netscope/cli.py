@@ -181,6 +181,8 @@ def main() -> None:
     diagnose = sub.add_parser("diagnose", help="explain common connection problems")
     diagnose.add_argument("host", nargs="?", default="example.com")
     diagnose.add_argument("--timeout", type=float, default=3.0)
+    diagnose.add_argument("--lang", choices=("tg", "ru", "en"), default="tg",
+                          help="diagnosis language: tg (Tajik), ru (Russian), en (English)")
     for command in (summary, dns, port, ping, ipv6, trace, diagnose):
         command.add_argument("--json", action="store_true")
         command.add_argument("--output", help="save report to a JSON or TXT file")
@@ -200,7 +202,7 @@ def main() -> None:
         data = traceroute_host(args.host, args.max_hops, args.timeout)
     elif args.command == "diagnose":
         from .smart import diagnose as run_diagnosis
-        data = run_diagnosis(args.host, args.timeout)
+        data = run_diagnosis(args.host, args.timeout, args.lang)
     else:
         parser.print_help()
         return
