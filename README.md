@@ -5,7 +5,6 @@
 <h1 align="center">NetScope</h1>
 <p align="center"><strong>Understand your internet connection. Fix problems with confidence.</strong></p>
 <p align="center">
-  <a href="https://github.com/Khayom1/NetScope/actions/workflows/tests.yml"><img src="https://github.com/Khayom1/NetScope/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
   <img src="https://img.shields.io/badge/python-3.10%2B-blue.svg" alt="Python 3.10+">
   <img src="https://img.shields.io/badge/dependencies-zero-brightgreen.svg" alt="Zero dependencies">
@@ -125,13 +124,29 @@ Do not publish reports without reviewing them first. They can contain hostnames,
 
 Use NetScope to troubleshoot your own device, website, server or a network you are authorized to test. Port checks and traceroute are diagnostic requests, not a security audit or vulnerability scanner. Do not use the tool to disrupt services or probe systems without permission.
 
-## Development
+## Test locally — no paid CI required
+
+NetScope can be tested directly on your device. No GitHub Actions, cloud runner, paid service or third-party Python package is required.
+
+### Android (Termux)
 
 ```bash
+pkg install python git
+git clone https://github.com/Khayom1/NetScope.git
+cd NetScope
+bash scripts/test.sh
+```
+
+### Linux, macOS and Windows
+
+With Python 3.10 or newer:
+
+```bash
+python -m compileall -q netscope tests
 python -m unittest discover -s tests -v
 ```
 
-No third-party Python packages are required. Contributions, bug reports, translations and accessibility improvements are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md).
+See [TESTING.md](TESTING.md) for troubleshooting. No third-party Python packages are required. Contributions, bug reports, translations and accessibility improvements are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md).
 
 ## Roadmap
 
