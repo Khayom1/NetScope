@@ -34,6 +34,16 @@ python -m netscope.cli diagnose example.com --output diagnosis.json
 
 NetScope checks name resolution, TCP port 443, HTTPS response and ping (when the system provides ping). It classifies common symptoms and gives practical next steps. **Ping failure alone is not treated as proof that the internet is down** because many networks block ICMP.
 
+## Languages
+
+The mobile-friendly web interface supports three languages:
+
+- **Тоҷикӣ** — Tajik (default)
+- **Русский** — Russian
+- **English** — English
+
+Use the language selector in the top-right corner. Your choice is saved locally in your browser. Smart diagnosis titles, explanations and recommended actions are returned in the selected language. No translation API, account, or internet-based language service is used.
+
 ## Features
 
 | Tool | What it helps answer |
