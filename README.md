@@ -28,7 +28,9 @@ python -m netscope.cli diagnose example.com
 Get machine-readable output or save a report:
 
 ```bash
-python -m netscope.cli diagnose example.com --json
+python -m netscope.cli diagnose example.com --lang tg
+python -m netscope.cli diagnose example.com --lang ru
+python -m netscope.cli diagnose example.com --lang en
 python -m netscope.cli diagnose example.com --output diagnosis.json
 ```
 
@@ -42,7 +44,7 @@ The mobile-friendly web interface supports three languages:
 - **Русский** — Russian
 - **English** — English
 
-Use the language selector in the top-right corner. Your choice is saved locally in your browser. Smart diagnosis titles, explanations and recommended actions are returned in the selected language. No translation API, account, or internet-based language service is used.
+Use the language selector in the top-right corner. Your choice is saved locally in your browser. Smart diagnosis titles, explanations and recommended actions are returned in the selected language. The CLI diagnosis command also accepts `--lang tg`, `--lang ru` or `--lang en` (Tajik is the default). No translation API, account, or internet-based language service is used.
 
 ## Features
 
