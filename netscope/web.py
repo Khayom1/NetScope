@@ -147,7 +147,10 @@ class Handler(BaseHTTPRequestHandler):
             host = validate_host(body.get("host", ""))
             if action == "diagnose":
                 timeout = float(body.get("timeout", 3))
-                result = diagnose(host, timeout)
+                lang = body.get("lang", "en")
+                if lang not in ("en", "ru", "tg"):
+                    raise ValueError("Choose a supported language: en, ru or tg.")
+                result = diagnose(host, timeout, lang)
             elif action == "summary":
                 result = cli.build_report(host)
             elif action == "dns":
