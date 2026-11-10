@@ -31,5 +31,23 @@ class SmartDiagnosisTests(unittest.TestCase):
             diagnose("example.com", timeout=99)
 
 
+    @patch("netscope.smart.cli.ping_host", return_value={"ok": False, "error": "blocked"})
+    @patch("netscope.smart.urlopen", side_effect=OSError("offline"))
+    @patch("netscope.smart.cli.check_port", return_value={"open": False})
+    @patch("netscope.smart.cli.dns_lookup", return_value={"ok": False, "error": "no dns"})
+    def test_diagnosis_supports_three_languages(self, dns, port, urlopen, ping):
+        tajik = diagnose("bad.invalid", lang="tg")
+        russian = diagnose("bad.invalid", lang="ru")
+        english = diagnose("bad.invalid", lang="en")
+        self.assertIn("суроғаи IP", tajik["findings"][0]["title"])
+        self.assertIn("не удалось", russian["findings"][0]["title"])
+        self.assertIn("could not be resolved", english["findings"][0]["title"])
+
+    def test_diagnosis_rejects_unsupported_language(self):
+        with self.assertRaises(ValueError):
+            diagnose("example.com", lang="fr")
+
+
+
 if __name__ == "__main__":
     unittest.main()
