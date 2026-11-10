@@ -39,7 +39,7 @@ def diagnose(host: str = "example.com", timeout: float = 3.0) -> dict[str, Any]:
     if not dns.get("ok"):
         status = "problem"
         findings.append({
-            "title": "The hostname could not be resolved",
+            "title": "DNS: the hostname could not be resolved",
             "why": "DNS did not return an address for this host.",
             "action": "Check the hostname, try another network, or compare DNS settings."
         })
