@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-import ipaddress
 import json
 import platform
 import re
@@ -207,9 +206,10 @@ def main() -> None:
         return
 
     print_result(data, getattr(args, "json", False))
-    if args.output:
-        save_report(data, args.output, args.output.lower().endswith(".json"))
-        print(f"Saved report: {args.output}")
+    output = getattr(args, "output", None)
+    if output:
+        save_report(data, output, output.lower().endswith(".json"))
+        print(f"Saved report: {output}")
 
 
 if __name__ == "__main__":
