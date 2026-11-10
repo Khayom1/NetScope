@@ -1,154 +1,150 @@
-
 <p align="center">
-  <img src="assets/netscope-banner.gif"
-       alt="NetScope Animated Banner"
-       width="100%">
+  <img src="assets/netscope-banner.gif" alt="NetScope — network diagnostics" width="100%">
 </p>
 
-
-NetScope
-
-Lightweight network diagnostics for Android Termux and desktop Python.
-
-NetScope is a small, dependency-free Python tool for checking DNS resolution, TCP connectivity, ping statistics, IPv6 connectivity, and network routes.
-
-It uses Python's standard library and does not require root access.
-
-Features
-
-- Network summary — inspect basic outbound network information.
-- DNS lookup — resolve IPv4 and IPv6 records.
-- TCP connectivity — test whether a host and port are reachable.
-- Ping analysis — inspect packet loss and round-trip time (RTT).
-- IPv6 diagnostics — check IPv6 DNS records and connectivity separately.
-- Traceroute — optionally inspect network routing paths.
-- Report export — save diagnostic results as JSON or TXT.
-- 
-- 
+<h1 align="center">NetScope</h1>
+<p align="center"><strong>Understand your internet connection. Fix problems with confidence.</strong></p>
 <p align="center">
-  <img src="assets/netscope-preview.png"
-       alt="NetScope Application Preview"
-       width="100%">
+  <a href="https://github.com/Khayom1/NetScope/actions/workflows/tests.yml"><img src="https://github.com/Khayom1/NetScope/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
+  <img src="https://img.shields.io/badge/python-3.10%2B-blue.svg" alt="Python 3.10+">
+  <img src="https://img.shields.io/badge/dependencies-zero-brightgreen.svg" alt="Zero dependencies">
+  <img src="https://img.shields.io/badge/platform-Android%20%7C%20Linux%20%7C%20macOS%20%7C%20Windows-lightgrey.svg" alt="Platforms">
 </p>
 
+NetScope is a free, open-source, privacy-first network troubleshooting toolkit. It checks DNS, secure TCP connectivity, HTTPS reachability, ping, IPv6 and routes — then **explains what the results mean and what to try next**.
 
-Requirements
+No account. No subscription. No telemetry. No root access for the core checks. Built with Python's standard library.
 
-- Python 3.10 or newer
-- Android Termux or desktop Python environment
-- Internet connection for network checks
-- Optional: "traceroute" system utility
+<p align="center"><img src="assets/netscope-preview.png" alt="NetScope interface preview" width="100%"></p>
 
-Installation
+## Start here: one-command diagnosis
 
-Android Termux
+The fastest way to understand a connection problem:
 
-Install the required packages:
+```bash
+python -m netscope.cli diagnose example.com
+```
 
+Get machine-readable output or save a report:
+
+```bash
+python -m netscope.cli diagnose example.com --json
+python -m netscope.cli diagnose example.com --output diagnosis.json
+```
+
+NetScope checks name resolution, TCP port 443, HTTPS response and ping (when the system provides ping). It classifies common symptoms and gives practical next steps. **Ping failure alone is not treated as proof that the internet is down** because many networks block ICMP.
+
+## Features
+
+| Tool | What it helps answer |
+|---|---|
+| Smart diagnosis | What failed, why it may have failed, and what to try |
+| DNS lookup | Can this hostname be translated into an IP address? |
+| TCP port check | Can this device reach a specific host and port? |
+| Ping | What packet loss and round-trip time does ICMP report? |
+| IPv6 check | Are IPv6 records present, and is IPv6 TCP connectivity usable? |
+| Traceroute | Which network hops respond on the route? |
+| Local reports | Can I save results as JSON or readable TXT? |
+| Local web UI | Can I run diagnostics from a mobile-friendly browser page? |
+
+## Install
+
+### Android (Termux)
+
+```bash
 pkg update
 pkg install python git
-
-Clone the repository:
-
 git clone https://github.com/Khayom1/NetScope.git
 cd NetScope
+python -m netscope.cli diagnose example.com
+```
 
-Check the available commands:
+Optional route tracing:
 
-python -m netscope.cli --help
-
-Desktop
-
-Clone the repository and enter its directory:
-
-git clone https://github.com/Khayom1/NetScope.git
-cd NetScope
-
-Run NetScope with Python:
-
-python -m netscope.cli --help
-
-Usage
-
-Network summary
-
-python -m netscope.cli summary
-
-DNS lookup
-
-python -m netscope.cli dns github.com
-
-IPv6 DNS lookup:
-
-python -m netscope.cli dns github.com --ipv6
-
-TCP port check
-
-python -m netscope.cli port github.com 443
-
-Ping diagnostics
-
-python -m netscope.cli ping 1.1.1.1 -c 4
-
-IPv6 connectivity
-
-python -m netscope.cli ipv6
-
-Traceroute
-
-Install the optional utility on Termux:
-
+```bash
 pkg install traceroute
+python -m netscope.cli trace example.com
+```
 
-Then run:
+### Linux, macOS and Windows
 
+Install Python 3.10 or newer, then:
+
+```bash
+git clone https://github.com/Khayom1/NetScope.git
+cd NetScope
+python -m netscope.cli diagnose example.com
+```
+
+The ping and traceroute commands depend on operating-system utilities. DNS, TCP and HTTPS checks use Python's standard library.
+
+## Mobile-friendly web interface
+
+```bash
+python -m netscope.web
+```
+
+Open **http://127.0.0.1:8765** in a browser on the same device. The server binds to loopback only; it is not a public website or LAN service.
+
+## Individual commands
+
+```bash
+python -m netscope.cli summary
+python -m netscope.cli dns github.com
+python -m netscope.cli dns github.com --ipv6
+python -m netscope.cli port github.com 443
+python -m netscope.cli ping 1.1.1.1 --count 4
+python -m netscope.cli ipv6
 python -m netscope.cli trace github.com
+```
 
-Export reports
+Add `--json` for structured output or `--output report.json` to save a report.
 
-Save results as JSON:
+## Understanding diagnosis
 
-python -m netscope.cli summary --output report.json
+- **DNS failed:** check the spelling, try another network, or compare DNS settings.
+- **DNS works, HTTPS fails:** check captive portals, VPN/proxy settings, firewall rules, and whether the destination is online.
+- **HTTPS works, ping fails:** the destination or network may block ICMP. The internet can still be working.
+- **IPv6 DNS exists but connection fails:** the network may not provide usable IPv6 routing.
 
-Save results as TXT:
+These are evidence-based hints, not claims to identify every cause. Network operators, firewalls, proxies and server policies can affect results.
 
-python -m netscope.cli summary --output report.txt
+## Privacy by design
 
-Running tests
+- Diagnostics run on your device.
+- NetScope has no analytics, tracking pixels, telemetry, accounts or remote report upload.
+- The web server listens on `127.0.0.1` only.
+- Reports are written only to the path you choose.
+- The summary report does not include your local IP address by default.
+- Network checks contact the destination you enter; DNS queries go to the resolver configured on your device.
 
-Run the unit test suite:
+Do not publish reports without reviewing them first. They can contain hostnames, IP addresses, timing data and error messages.
 
+## Safety and responsible use
+
+Use NetScope to troubleshoot your own device, website, server or a network you are authorized to test. Port checks and traceroute are diagnostic requests, not a security audit or vulnerability scanner. Do not use the tool to disrupt services or probe systems without permission.
+
+## Development
+
+```bash
 python -m unittest discover -s tests -v
+```
 
-Privacy and security
+No third-party Python packages are required. Contributions, bug reports, translations and accessibility improvements are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md).
 
-NetScope performs network checks requested by the user.
+## Roadmap
 
-- It does not scan local networks or enumerate devices.
-- It does not collect credentials.
-- It does not upload diagnostic reports to a remote server.
-- Reports are saved locally when requested.
+- [x] Dependency-free CLI diagnostics
+- [x] Loopback-only mobile web interface
+- [x] Plain-language smart diagnosis
+- [x] JSON/TXT report export
+- [ ] DNS resolver comparison with clear caveats
+- [ ] Optional history stored locally on the device
+- [ ] More localized explanations and accessibility improvements
 
-Only test systems and network services that you own or have permission to examine.
+## License
 
-Limitations
+MIT — free to use, modify, share and build upon. See [LICENSE](LICENSE).
 
-Network results may vary depending on firewalls, DNS configuration, mobile carriers, and internet connectivity.
-
-An IPv6 DNS record does not guarantee that IPv6 connectivity is available. The IPv6 command performs a separate connectivity check.
-
-Traceroute is optional and may be blocked or filtered by some networks.
-
-Project
-
-- Repository: https://github.com/Khayom1/NetScope
-- Version: 0.2.0
-- License: MIT
-
-License
-
-This project is licensed under the MIT License. See "LICENSE" (LICENSE).
-
----
-
-Contributions, bug reports, and suggestions are welcome.
+**Built by [Khayom1](https://github.com/Khayom1) · [Report a bug](https://github.com/Khayom1/NetScope/issues/new/choose) · [Star the project](https://github.com/Khayom1/NetScope)**
