@@ -23,7 +23,7 @@ button:disabled{opacity:.55;cursor:wait}@media(max-width:760px){.grid{grid-templ
 </style>
 </head>
 <body><main class="wrap">
-<header class="top"><div class="brand"><div class="logo">⌁</div>NetScope</div><span class="pill">● PRIVATE · LOCAL</span></header>
+<header class="top"><div class="brand"><div class="logo">⌁</div>NetScope</div><div style="display:flex;align-items:center;gap:9px"><label for="language" id="languageLabel" style="color:var(--muted);font-size:12px">Language</label><select id="language" aria-label="Language" style="background:#0b1728;border:1px solid #30465f;border-radius:9px;color:var(--text);padding:8px"><option value="tg">Тоҷикӣ</option><option value="ru">Русский</option><option value="en">English</option></select><span class="pill" id="privacyPill">● PRIVATE · LOCAL</span></div></header>
 <section class="hero"><h1>Internet trouble?<br>Find out why.</h1><p>Free network checks with plain-language explanations. Your diagnostics stay on this device.</p>
 <div class="hostrow"><input id="target" value="example.com" aria-label="Website or host to diagnose" placeholder="Enter a website, e.g. example.com"><button class="primary" id="diagnose">Diagnose connection ↗</button></div></section>
 <section class="grid">
@@ -40,25 +40,48 @@ button:disabled{opacity:.55;cursor:wait}@media(max-width:760px){.grid{grid-templ
 </main>
 <script>
 const $=id=>document.getElementById(id);
+const words={
+en:{language:"Language",pill:"● PRIVATE · LOCAL",headline:"Internet trouble?<br>Find out why.",intro:"Free network checks with plain-language explanations. Your diagnostics stay on this device.",hostLabel:"Website or host to diagnose",placeholder:"Enter a website, e.g. example.com",button:"Diagnose connection ↗",checking:"Checking…",cards:[["◎ Smart diagnosis","Checks DNS, secure connection, HTTPS and ping, then explains the findings."],["⌕ DNS lookup","Find the IP addresses returned for a hostname."],["⇄ TCP port check","Test whether a selected host and port can be reached."],["⌁ Ping","Measure packet loss and round-trip delay when ICMP is available."],["◇ IPv6 check","Separate IPv6 DNS records from actual connectivity."],["⌖ Traceroute","Inspect responding hops towards a destination."]],privacy:"Privacy: the local server listens only on 127.0.0.1. Results are not uploaded. Some networks block ping, so ping failure alone does not mean your internet is down. Only test systems you own or have permission to examine.",technical:"Technical details (JSON)",try:"Try this: ",healthy:"Your secure connection is reachable",problem:"A connection problem was found",limited:"Connection is partly reachable",running:"RUNNING",passed:"Passed",failed:"Failed",noReply:"No reply",errorTitle:"Could not complete diagnosis",resultTitle:"Diagnosis",footer:"Built by",openSource:"Open source on GitHub",status:"Status"},
+ru:{language:"Язык",pill:"● ПРИВАТНО · ЛОКАЛЬНО",headline:"Проблемы с интернетом?<br>Узнайте причину.",intro:"Бесплатная диагностика сети с понятными объяснениями. Результаты остаются на вашем устройстве.",hostLabel:"Сайт или адрес для проверки",placeholder:"Введите сайт, например example.com",button:"Проверить соединение ↗",checking:"Проверка…",cards:[["◎ Умная диагностика","Проверяет DNS, защищённое соединение, HTTPS и Ping, затем объясняет результаты."],["⌕ Проверка DNS","Показывает IP-адреса, полученные для имени сайта."],["⇄ Проверка TCP-порта","Проверяет доступность выбранного адреса и порта."],["⌁ Ping","Измеряет потерю пакетов и задержку, если ICMP доступен."],["◇ Проверка IPv6","Разделяет наличие IPv6-записей DNS и реальное подключение."],["⌖ Traceroute","Показывает отвечающие узлы на пути к адресу."]],privacy:"Конфиденциальность: локальный сервер доступен только через 127.0.0.1. Результаты никуда не отправляются. Некоторые сети блокируют Ping, поэтому отсутствие ответа не означает отсутствие интернета. Проверяйте только свои системы или те, на проверку которых у вас есть разрешение.",technical:"Технические данные (JSON)",try:"Что сделать: ",healthy:"Защищённое соединение доступно",problem:"Обнаружена проблема с соединением",limited:"Соединение доступно частично",running:"ПРОВЕРКА",passed:"Успешно",failed:"Ошибка",noReply:"Нет ответа",errorTitle:"Не удалось завершить проверку",resultTitle:"Результат диагностики",footer:"Создатель",openSource:"Открытый код на GitHub",status:"Статус"},
+tg:{language:"Забон",pill:"● МАХФӢ · МАҲАЛЛӢ",headline:"Интернет мушкил дорад?<br>Сабабашро ёбед.",intro:"Санҷиши ройгони шабака бо шарҳи фаҳмо. Натиҷаҳо дар ҳамин дастгоҳ мемонанд.",hostLabel:"Сомона ё суроға барои санҷиш",placeholder:"Сомонаро нависед, масалан example.com",button:"Пайвастро санҷед ↗",checking:"Санҷиш…",cards:[["◎ Ташхиси ҳушманд","DNS, пайвасти бехатар, HTTPS ва Ping-ро месанҷад ва натиҷаро мефаҳмонад."],["⌕ Санҷиши DNS","Суроғаҳои IP-и гирифташуда барои номи сомонаро нишон медиҳад."],["⇄ Санҷиши порти TCP","Дастрасии суроға ва порти интихобшударо месанҷад."],["⌁ Ping","Талафи бастаҳо ва таъхири ҷавобро ҳангоми дастрас будани ICMP чен мекунад."],["◇ Санҷиши IPv6","Сабтҳои DNS-и IPv6-ро аз пайвасти воқеӣ ҷудо месанҷад."],["⌖ Traceroute","Гиреҳҳои ҷавобдиҳандаи масири шабакаро нишон медиҳад."]],privacy:"Махфият: сервери маҳаллӣ танҳо дар 127.0.0.1 кор мекунад. Натиҷаҳо ба интернет фиристода намешаванд. Баъзе шабакаҳо Ping-ро мебанданд; набудани ҷавоби Ping маънои қатъ будани интернетро надорад. Танҳо системаҳои худ ё системаҳои иҷозатдодашударо санҷед.",technical:"Маълумоти техникӣ (JSON)",try:"Чӣ кор кунед: ",healthy:"Пайвасти бехатар дастрас аст",problem:"Мушкилоти пайвастшавӣ ёфт шуд",limited:"Пайвастшавӣ қисман дастрас аст",running:"САНҶИШ",passed:"Муваффақ",failed:"Ноком",noReply:"Ҷавоб нест",errorTitle:"Санҷиш анҷом наёфт",resultTitle:"Натиҷаи ташхис",footer:"Сохтааст",openSource:"Рамзи кушода дар GitHub",status:"Ҳолат"}
+};
+let lang=localStorage.getItem("netscope-language")||"tg";
+if(!["tg","ru","en"].includes(lang))lang="tg";
+function applyLanguage(){
+ const t=words[lang];document.documentElement.lang=lang;$("language").value=lang;
+ $("languageLabel").textContent=t.language;$("privacyPill").textContent=t.pill;
+ document.querySelector(".hero h1").innerHTML=t.headline;
+ document.querySelector(".hero>p").textContent=t.intro;
+ $("target").setAttribute("aria-label",t.hostLabel);$("target").placeholder=t.placeholder;
+ $("diagnose").textContent=t.button;
+ document.querySelectorAll(".card").forEach((card,i)=>{card.querySelector("h2").textContent=t.cards[i][0];card.querySelector("p").textContent=t.cards[i][1]});
+ document.querySelector(".notice").textContent=t.privacy;
+ document.querySelector("summary").textContent=t.technical;
+ document.querySelector(".foot").innerHTML=t.footer+' <a href="https://github.com/Khayom1" target="_blank" rel="noopener">Khayom1</a> · <a href="https://github.com/Khayom1/NetScope" target="_blank" rel="noopener">'+t.openSource+'</a> · MIT License';
+}
 function node(tag,cls,txt){const n=document.createElement(tag);if(cls)n.className=cls;if(txt!==undefined)n.textContent=String(txt);return n}
 function render(data){
- const status=data.status||"limited";$("resultTitle").textContent=status==="healthy"?"Your secure connection is reachable":status==="problem"?"A connection problem was found":"Connection is partly reachable";
+ const t=words[lang],status=data.status||"limited";
+ $("resultTitle").textContent=status==="healthy"?t.healthy:status==="problem"?t.problem:t.limited;
  $("resultTag").textContent=status.toUpperCase();$("resultTag").className="tag "+status;
  const checks=$("checks");checks.replaceChildren();
  for(const [key,label] of [["dns","DNS"],["tcp_443","TCP 443"],["https","HTTPS"],["ping","PING"]]){
-  const value=data.checks[key]||{};let good=key==="dns"?value.ok:key==="tcp_443"?value.open:key==="https"?value.ok:value.ok;
-  const c=node("div","check");c.append(node("small","",label));c.append(node("strong","",good?"Passed":key==="ping"?"No reply":"Failed"));checks.append(c);
+  const value=data.checks[key]||{},good=key==="dns"?value.ok:key==="tcp_443"?value.open:value.ok;
+  const c=node("div","check");c.append(node("small","",label));c.append(node("strong","",good?t.passed:key==="ping"?t.noReply:t.failed));checks.append(c);
  }
  const findings=$("findings");findings.replaceChildren();
- (data.findings||[]).forEach(f=>{const item=node("article","finding");item.append(node("h3","",f.title));item.append(node("p","",f.why));const action=node("p","");action.append(node("b","","Try this: "));action.append(document.createTextNode(f.action));item.append(action);findings.append(item)});
+ (data.findings||[]).forEach(f=>{const item=node("article","finding");item.append(node("h3","",f.title));item.append(node("p","",f.why));const action=node("p","");action.append(node("b","",t.try));action.append(document.createTextNode(f.action));item.append(action);findings.append(item)});
  $("raw").textContent=JSON.stringify(data,null,2);
 }
 async function diagnose(){
  const host=$("target").value.trim();if(!host){$("target").focus();return}
- const button=$("diagnose");button.disabled=true;button.textContent="Checking…";$("result").style.display="block";$("resultTitle").textContent="Checking your connection";$("resultTag").textContent="RUNNING";
- try{const response=await fetch("/api/run",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"diagnose",host})});const body=await response.json();if(!response.ok||!body.ok)throw new Error(body.error||"Request failed");render(body.result)}
- catch(error){$("resultTitle").textContent="Could not complete diagnosis";$("resultTag").textContent="ERROR";$("findings").replaceChildren(node("p","",error.message))}
- finally{button.disabled=false;button.textContent="Diagnose connection ↗"}
+ const button=$("diagnose"),t=words[lang];button.disabled=true;button.textContent=t.checking;
+ $("result").style.display="block";$("resultTitle").textContent=t.checking;$("resultTag").textContent=t.running;
+ try{const response=await fetch("/api/run",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"diagnose",host,lang})});const body=await response.json();if(!response.ok||!body.ok)throw new Error(body.error||"Request failed");render(body.result)}
+ catch(error){$("resultTitle").textContent=t.errorTitle;$("resultTag").textContent="ERROR";$("findings").replaceChildren(node("p","",error.message))}
+ finally{button.disabled=false;button.textContent=t.button}
 }
+$("language").addEventListener("change",e=>{lang=e.target.value;localStorage.setItem("netscope-language",lang);applyLanguage()});
 $("diagnose").addEventListener("click",diagnose);$("target").addEventListener("keydown",e=>{if(e.key==="Enter")diagnose()});
+applyLanguage();
 </script></body></html>
