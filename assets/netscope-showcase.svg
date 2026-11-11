@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="980" viewBox="0 0 1440 980" role="img" aria-labelledby="title desc">
+<title id="title">NetScope — Network diagnostics and visibility</title>
+<desc id="desc">An animated network diagnostics map showing a device, DNS resolution, TCP port 443, HTTPS, ping, route hops, IPv6 and local privacy.</desc>
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#071321"/><stop offset=".55" stop-color="#0b1b2c"/><stop offset="1" stop-color="#07111e"/></linearGradient>
+ <linearGradient id="mint" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#72f3d2"/><stop offset="1" stop-color="#43bde9"/></linearGradient>
+ <linearGradient id="blue" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#55d9c0"/><stop offset="1" stop-color="#64aaff"/></linearGradient>
+ <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#142940"/><stop offset="1" stop-color="#0e1d30"/></linearGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <filter id="shadow"><feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#000" flood-opacity=".35"/></filter>
+ <style>
+ .t{font-family:Inter,Arial,sans-serif;fill:#edf7ff}.m{font-family:Inter,Arial,sans-serif;fill:#91a9bf}.tiny{font-size:11px;letter-spacing:1.7px;font-weight:700}.small{font-size:14px}.label{font-size:17px;font-weight:750}.panel{fill:url(#panel);stroke:#29415a;stroke-width:1.5}.node{fill:#10243a;stroke:#4b7188;stroke-width:1.5}.mint{fill:#72f3d2}.blue{fill:#79b9ff}.wire{fill:none;stroke:#31526a;stroke-width:3;stroke-linecap:round}.dash{stroke-dasharray:8 12}.tag{fill:#153a3c;stroke:#2c776d}.dot{fill:#79f3d2}
+ </style>
+</defs>
+<rect width="1440" height="980" rx="30" fill="url(#bg)"/>
+<circle cx="1230" cy="110" r="260" fill="#36d6c0" opacity=".045"/>
+<circle cx="120" cy="900" r="260" fill="#478bff" opacity=".05"/>
+<path d="M0 165H1440" stroke="#1e354b"/>
+<!-- brand -->
+<g transform="translate(70 55)">
+ <rect width="54" height="54" rx="16" fill="url(#mint)"/>
+ <path d="M10 28h8l7-12 9 24 7-12h5" fill="none" stroke="#082031" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+ <text x="72" y="37" class="t" font-size="34" font-weight="850" letter-spacing="-1">NetScope</text>
+</g>
+<text x="1370" y="84" text-anchor="end" class="mint tiny">NETWORK DIAGNOSTICS · v0.3.0</text>
+<text x="70" y="230" class="t" font-size="62" font-weight="850" letter-spacing="-2">See the path.</text>
+<text x="70" y="300" font-size="62" font-weight="850" letter-spacing="-2" fill="url(#mint)">Understand the problem.</text>
+<text x="74" y="345" class="m" font-size="20">Evidence-led network checks. Clear explanations. Your device, your data.</text>
+<!-- network map background -->
+<rect x="60" y="390" width="1320" height="390" rx="24" fill="#0a1726" stroke="#294159" filter="url(#shadow)"/>
+<text x="92" y="430" class="mint tiny">01 / CONNECTION DIAGNOSTICS</text>
+<text x="1345" y="430" text-anchor="end" class="m tiny">ILLUSTRATIVE FLOW · NOT LIVE RESULTS</text>
+<!-- links -->
+<path class="wire" d="M235 565H350 M510 565H625 M785 565H900 M1060 565H1175"/>
+<path class="wire dash" d="M430 605V685H980V605"/>
+<path class="wire" d="M705 605V720H1260V605"/>
+<!-- animated packet on primary route -->
+<circle r="7" fill="#8affdf" filter="url(#glow)">
+ <animateMotion dur="5s" repeatCount="indefinite" path="M235 565H350H510H625H785H900H1060H1175"/>
+</circle>
+<circle r="5" fill="#79b9ff" filter="url(#glow)">
+ <animateMotion dur="5s" begin="1.7s" repeatCount="indefinite" path="M235 565H350H510H625H785H900H1060H1175"/>
+</circle>
+<!-- nodes -->
+<g transform="translate(155 510)">
+ <rect width="160" height="110" rx="18" class="node"/>
+ <circle cx="80" cy="35" r="18" fill="#173e4a" stroke="#69e5d0"/>
+ <path d="M68 35h24M80 23v24" stroke="#8cf4dd" stroke-width="2.5" stroke-linecap="round"/>
+ <text x="80" y="76" text-anchor="middle" class="t label">DEVICE</text><text x="80" y="96" text-anchor="middle" class="m" font-size="11">Local checks</text>
+</g>
+<g transform="translate(350 510)">
+ <rect width="160" height="110" rx="18" class="node"/>
+ <circle cx="80" cy="35" r="18" fill="#173e4a" stroke="#69e5d0"/>
+ <path d="M64 35h32M80 19c-12 10-12 22 0 32M80 19c12 10 12 22 0 32" fill="none" stroke="#8cf4dd" stroke-width="2"/>
+ <text x="80" y="76" text-anchor="middle" class="t label">DNS</text><text x="80" y="96" text-anchor="middle" class="m" font-size="11">Name → address</text>
+</g>
+<g transform="translate(625 510)">
+ <rect width="160" height="110" rx="18" class="node"/>
+ <circle cx="80" cy="35" r="18" fill="#19354e" stroke="#79b9ff"/>
+ <path d="M69 35h22M80 24v22" stroke="#a6d2ff" stroke-width="2.5" stroke-linecap="round"/>
+ <text x="80" y="76" text-anchor="middle" class="t label">TCP / 443</text><text x="80" y="96" text-anchor="middle" class="m" font-size="11">Secure port check</text>
+</g>
+<g transform="translate(900 510)">
+ <rect width="160" height="110" rx="18" class="node"/>
+ <circle cx="80" cy="35" r="18" fill="#173e4a" stroke="#69e5d0"/>
+ <path d="M69 35l8 8 15-18" fill="none" stroke="#8cf4dd" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+ <text x="80" y="76" text-anchor="middle" class="t label">HTTPS</text><text x="80" y="96" text-anchor="middle" class="m" font-size="11">HTTP response</text>
+</g>
+<g transform="translate(1175 510)">
+ <rect width="160" height="110" rx="18" class="node"/>
+ <circle cx="80" cy="35" r="18" fill="#19354e" stroke="#79b9ff"/>
+ <path d="M65 37q15-23 30 0M70 43q10-14 20 0" fill="none" stroke="#a6d2ff" stroke-width="2.5" stroke-linecap="round"/>
+ <circle cx="80" cy="47" r="2.5" fill="#a6d2ff"/>
+ <text x="80" y="76" text-anchor="middle" class="t label">PING</text><text x="80" y="96" text-anchor="middle" class="m" font-size="11">Latency · packet loss</text>
+</g>
+<!-- pulse rings -->
+<circle cx="430" cy="545" r="28" fill="none" stroke="#72f3d2" stroke-width="2" opacity=".7"><animate attributeName="r" values="20;43;20" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values=".7;0;.7" dur="3s" repeatCount="indefinite"/></circle>
+<circle cx="980" cy="545" r="28" fill="none" stroke="#72f3d2" stroke-width="2" opacity=".7"><animate attributeName="r" values="20;43;20" dur="3.6s" repeatCount="indefinite"/><animate attributeName="opacity" values=".7;0;.7" dur="3.6s" repeatCount="indefinite"/></circle>
+<!-- route and ipv6 labels -->
+<g transform="translate(350 680)">
+ <rect width="180" height="52" rx="12" fill="#112c3d" stroke="#2e6a70"/>
+ <text x="90" y="22" text-anchor="middle" class="mint tiny">TRACEROUTE</text><text x="90" y="40" text-anchor="middle" class="m" font-size="11">Responding route hops</text>
+</g>
+<g transform="translate(620 700)">
+ <rect width="170" height="52" rx="12" fill="#12263d" stroke="#41658b"/>
+ <text x="85" y="22" text-anchor="middle" class="blue tiny">IPv6</text><text x="85" y="40" text-anchor="middle" class="m" font-size="11">DNS + TCP reachability</text>
+</g>
+<g transform="translate(900 680)">
+ <rect width="180" height="52" rx="12" fill="#112c3d" stroke="#2e6a70"/>
+ <text x="90" y="22" text-anchor="middle" class="mint tiny">DIAGNOSIS</text><text x="90" y="40" text-anchor="middle" class="m" font-size="11">Evidence → next steps</text>
+</g>
+<!-- bottom feature tiles -->
+<g transform="translate(60 815)">
+ <rect width="305" height="110" rx="17" class="panel"/>
+ <text x="24" y="35" class="mint tiny">02 / EXPLAIN</text><text x="24" y="65" class="t label">Not just a status light.</text><text x="24" y="88" class="m small">Understand symptoms and actions.</text>
+</g>
+<g transform="translate(390 815)">
+ <rect width="305" height="110" rx="17" class="panel"/>
+ <text x="24" y="35" class="blue tiny">03 / EXPORT</text><text x="24" y="65" class="t label">Keep your evidence.</text><text x="24" y="88" class="m small">Readable TXT · Structured JSON</text>
+</g>
+<g transform="translate(720 815)">
+ <rect width="305" height="110" rx="17" class="panel"/>
+ <text x="24" y="35" class="mint tiny">04 / LOCAL-FIRST</text><text x="24" y="65" class="t label">Private by design.</text><text x="24" y="88" class="m small">Loopback server · No telemetry</text>
+</g>
+<g transform="translate(1050 815)">
+ <rect width="330" height="110" rx="17" class="panel"/>
+ <text x="24" y="35" class="blue tiny">05 / EVERYDAY TOOLS</text><text x="24" y="65" class="t label">CLI + mobile web UI.</text><text x="24" y="88" class="m small">Python standard library · No paid API</text>
+</g>
+<text x="720" y="960" text-anchor="middle" class="m" font-size="12">NETSCOPE · NETWORK CLARITY, WITHOUT THE NOISE · OPEN SOURCE · MIT</text>
+</svg>
